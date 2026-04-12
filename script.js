@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canvas) {
         const ctx = canvas.getContext('2d');
         let particles = [];
-        
+
         // Setup canvas size
         function resize() {
             canvas.width = window.innerWidth;
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initParticles();
         }
         window.addEventListener('resize', resize);
-        
+
         // Mouse interaction for hidden depth
         let mouse = { x: null, y: null, radius: 180 };
         window.addEventListener('mousemove', (e) => {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-                
+
                 // Wrap around edges to maintain structural integrity
                 if (this.x > canvas.width) this.x = 0;
                 else if (this.x < 0) this.x = canvas.width;
@@ -95,37 +95,37 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw();
-                
+
                 // Strong internal connections
                 for (let j = i; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
-                    
+
                     if (distance < 110) {
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(44, 53, 57, ${0.2 * (1 - distance/110)})`; // Clearer slate internal lines
+                        ctx.strokeStyle = `rgba(44, 53, 57, ${0.2 * (1 - distance / 110)})`; // Clearer slate internal lines
                         ctx.lineWidth = 0.5;
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
                         ctx.stroke();
                     }
                 }
-                
+
                 // Hidden depth (connecting to mouse with glowing yellow accent)
                 if (mouse.x != null && mouse.y != null) {
                     const dxMouse = particles[i].x - mouse.x;
                     const dyMouse = particles[i].y - mouse.y;
                     const distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-                    
+
                     if (distanceMouse < mouse.radius) {
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(255, 192, 0, ${0.3 * (1 - distanceMouse/mouse.radius)})`; // Banana yellow hidden depth
+                        ctx.strokeStyle = `rgba(255, 192, 0, ${0.3 * (1 - distanceMouse / mouse.radius)})`; // Banana yellow hidden depth
                         ctx.lineWidth = 1;
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(mouse.x, mouse.y);
                         ctx.stroke();
-                        
+
                         // Very subtle gravitation towards mysterious depth (mouse core)
                         particles[i].x -= dxMouse * 0.003;
                         particles[i].y -= dyMouse * 0.003;
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             requestAnimationFrame(animateNetwork);
         }
-        
+
         resize();
         animateNetwork();
     }
