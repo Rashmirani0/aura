@@ -138,4 +138,19 @@ document.addEventListener('DOMContentLoaded', () => {
         resize();
         animateNetwork();
     }
+
+    // Dynamic GitHub Commit Fetcher for Bank Reconciliation Tool
+    const brsUpdateTime = document.getElementById('brs-update-time');
+    if (brsUpdateTime) {
+        fetch('https://api.github.com/repos/Rashmirani0/bank-reconciliation-tool/commits?per_page=1')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const commitDate = new Date(data[0].commit.committer.date);
+                    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                    brsUpdateTime.textContent = `⏱️ Updated: ${commitDate.toLocaleDateString('en-US', options)}`;
+                }
+            })
+            .catch(error => console.error('Error fetching repo data:', error));
+    }
 });
